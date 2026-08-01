@@ -48,9 +48,10 @@ public class App : Application
             client.Address = url);
         serviceCollection.AddGrpcClient<GatewayAuthenticationService.GatewayAuthenticationServiceClient>(client =>
             client.Address = url);
-        
+
         // Services
         serviceCollection.AddSingleton<ITokenService, TokenService>();
+        serviceCollection.AddTransient<LoginService>();
 
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
