@@ -15,13 +15,6 @@ public abstract record LoginResult
     public sealed record Verification(string Session) : LoginResult;
 }
 
-public abstract record LoginTwoFactorReq
-{
-    public sealed record Totp(string Code) : LoginTwoFactorReq;
-
-    public sealed record Recovery(string Code) : LoginTwoFactorReq;
-}
-
 public class LoginService(
     ExternalAuthenticationService.ExternalAuthenticationServiceClient client,
     ITokenService tokenService)
