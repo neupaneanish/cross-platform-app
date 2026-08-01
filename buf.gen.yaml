@@ -1,0 +1,29 @@
+﻿version: v2
+
+managed:
+  enabled: true
+  
+  override:
+    - file_option: csharp_namespace_prefix
+      value: "TuinFounder"
+  
+  disable:
+    - file_option: csharp_namespace
+      module: buf.build/bufbuild/protovalidate
+
+    - file_option: csharp_namespace
+      module: buf.build/googleapis/googleapis
+
+    - file_option: csharp_namespace
+      module: buf.build/protocolbuffers/well-known-types
+
+plugins:
+  - remote: buf.build/protocolbuffers/csharp
+    out: Models
+    opt:
+      - base_namespace=TuinFounder
+
+  - remote: buf.build/grpc/csharp
+    out: Models
+    opt:
+      - base_namespace=TuinFounder
