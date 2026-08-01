@@ -54,6 +54,7 @@ public class App : Application
         serviceCollection.AddTransient<LoginService>();
         serviceCollection.AddTransient<ForgetPasswordService>();
         serviceCollection.AddTransient<RegisterService>();
+        serviceCollection.AddTransient<ResetPasswordService>();
 
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
