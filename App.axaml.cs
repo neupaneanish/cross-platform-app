@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using TuinFounder.External.Authentication.V1;
 using TuinFounder.Gateway.Authentication.V1;
+using TuinFounder.Services;
 using TuinFounder.ViewModels;
 using TuinFounder.Views;
 
@@ -47,6 +48,9 @@ public class App : Application
             client.Address = url);
         serviceCollection.AddGrpcClient<GatewayAuthenticationService.GatewayAuthenticationServiceClient>(client =>
             client.Address = url);
+        
+        // Services
+        serviceCollection.AddSingleton<ITokenService, TokenService>();
 
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
