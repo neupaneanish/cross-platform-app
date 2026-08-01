@@ -59,6 +59,7 @@ public class App : Application
 
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
+        serviceCollection.AddTransient<LoginViewModel>();
 
         // Views
         serviceCollection.AddTransient<MainView>(sp =>
