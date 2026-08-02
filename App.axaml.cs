@@ -60,6 +60,14 @@ public class App : Application
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
         serviceCollection.AddTransient<LoginViewModel>();
+        serviceCollection.AddTransient<Func<string, SessionType, VerificationViewModel>>(sp =>
+        {
+            return (session, sessionType) =>
+            {
+                var service = sp.GetRequiredService<VerificationService>();
+                return new VerificationViewModel(service, session, sessionType);
+            };
+        });
 
         // Views
         serviceCollection.AddTransient<MainView>(sp =>

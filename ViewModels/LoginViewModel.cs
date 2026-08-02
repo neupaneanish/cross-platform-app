@@ -9,7 +9,10 @@ using TuinFounder.Validators;
 
 namespace TuinFounder.ViewModels;
 
-public partial class LoginViewModel(LoginService service) : ViewModelBase
+public partial class LoginViewModel(
+    LoginService service,
+    Func<string, SessionType, VerificationViewModel> verificationFactory)
+    : ViewModelBase
 {
     private readonly string _errMessage = "Something went wrong, try again";
 
@@ -47,11 +50,13 @@ public partial class LoginViewModel(LoginService service) : ViewModelBase
                 case LoginResult.Success:
                     // TODO: Navigate to Dashboard / Home
                     break;
-                case LoginResult.Totp:
-                    // TODO: Navigate to Verification
+                case LoginResult.Totp totp:
+                    verificationFactory(totp.Session, SessionType.Totp);
+                    // TODO: Pass ViewModel
                     break;
-                case LoginResult.Verification:
-                    // TODO: Navigate to verification
+                case LoginResult.Verification verification:
+                    verificationFactory(verification.Session, SessionType.Verification);
+                    // TODO: Pass ViewModel
                     break;
                 default:
                     ErrorMessage = _errMessage;

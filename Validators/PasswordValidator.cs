@@ -31,7 +31,6 @@ public partial class PasswordValidator : ValidationAttribute
         if (errors.Length <= 0) return ValidationResult.Success;
         var memberNames = validationContext.MemberName is { } name ? new[] { name } : null;
         return new ValidationResult(string.Join("\n", errors), memberNames);
-
     }
 
     public static string[] GetErrors(string? password)
@@ -41,9 +40,9 @@ public partial class PasswordValidator : ValidationAttribute
         var errors = new List<string>();
 
         if (password.Length < MinLength) errors.Add($"Must be at least {MinLength} characters");
-        
+
         if (password.Length > MaxLength) errors.Add($"Cannot exceed {MaxLength} characters");
-        
+
         if (!Digit().IsMatch(password)) errors.Add("At least one digit");
 
         if (!UpperCase().IsMatch(password)) errors.Add("At least one uppercase");
@@ -51,7 +50,7 @@ public partial class PasswordValidator : ValidationAttribute
         if (!LowerCase().IsMatch(password)) errors.Add("At least one lowercase");
 
         if (!Special().IsMatch(password)) errors.Add("At least one special");
-        
+
         return [.. errors];
     }
 }

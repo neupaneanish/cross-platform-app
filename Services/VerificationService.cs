@@ -32,7 +32,7 @@ public class VerificationService(
     private static readonly RpcException InvalidResponseException =
         new(new Status(StatusCode.Internal, "Invalid response"));
 
-    public async Task<AccountVerificationResult.Success> LoginTwoFactorAsync(
+    public async Task LoginTwoFactorAsync(
         string session,
         LoginTwoFactorReq req,
         CancellationToken cancellationToken = default)
@@ -52,7 +52,7 @@ public class VerificationService(
         }
 
         var response = await client.LoginTwoFactorAsync(request, cancellationToken: cancellationToken);
-        return SaveToken(response.Token);
+        tokenService.Save(response.Token);
     }
 
     public async Task<VerificationResponse> VerificationAsync(
@@ -85,7 +85,8 @@ public class VerificationService(
         switch (response.ResponseCase)
         {
             case AccountVerificationResponse.ResponseOneofCase.Token:
-                return SaveToken(response.Token);
+                tokenService.Save(response.Token);
+                return new AccountVerificationResult.Success();
             case AccountVerificationResponse.ResponseOneofCase.TotpSession:
                 return new AccountVerificationResult.Totp(response.TotpSession);
             case AccountVerificationResponse.ResponseOneofCase.ResetSession:
@@ -106,11 +107,5 @@ public class VerificationService(
         };
 
         return await client.ResendAsync(request, cancellationToken: cancellationToken);
-    }
-
-    private AccountVerificationResult.Success SaveToken(Token token)
-    {
-        tokenService.Save(token);
-        return new AccountVerificationResult.Success();
     }
 }
