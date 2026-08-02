@@ -31,6 +31,8 @@ public partial class CodeValidator(CodeType codeType) : ValidationAttribute
             _ => false
         };
 
-        return isValid ? ValidationResult.Success : new ValidationResult("Enter a valid code.", [validationContext.MemberName!]);
+        return isValid
+            ? ValidationResult.Success
+            : new ValidationResult("Enter a valid code.", [validationContext.MemberName!]);
     }
 }

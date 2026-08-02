@@ -60,6 +60,7 @@ public class App : Application
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
         serviceCollection.AddTransient<LoginViewModel>();
+        serviceCollection.AddTransient<ForgetPasswordViewModel>();
         serviceCollection.AddTransient<Func<string, SessionType, VerificationViewModel>>(sp =>
         {
             return (session, sessionType) =>
