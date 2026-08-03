@@ -9,14 +9,26 @@ using TuinFounder.Validators;
 
 namespace TuinFounder.ViewModels;
 
-public partial class ResetPasswordViewModel(
-    ResetPasswordService service,
-    string session) : ViewModelBase
+public partial class RegisterViewModel(
+    RegisterService service,
+    Func<string, SessionType, VerificationViewModel> verificationFactory
+) : ViewModelBase
 {
-    private string Session { get; } = session;
     [ObservableProperty] private partial string? ErrorMessage { get; set; } = null;
 
     [ObservableProperty] private partial bool IsLoading { get; set; } = false;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Email is required")]
+    [EmailAddress(ErrorMessage = "Enter a valid email")]
+    public partial string Email { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    [NotifyDataErrorInfo]
+    [Required(ErrorMessage = "Phone is required")]
+    [PhoneValidator]
+    public partial string Phone { get; set; } = string.Empty;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
@@ -49,8 +61,9 @@ public partial class ResetPasswordViewModel(
 
         try
         {
-            await service.ResetPasswordAsync(Session, Password, ConfirmPassword);
-            // TODO: Navigate to Login
+            var response = await service.RegisterAsync(Email, Password, ConfirmPassword, Phone);
+            verificationFactory(response.Session, SessionType.Account);
+            // TODO: Navigate to Verification
         }
         catch (RpcException e)
         {

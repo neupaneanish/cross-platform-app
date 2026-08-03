@@ -61,6 +61,7 @@ public class App : Application
         serviceCollection.AddTransient<MainViewModel>();
         serviceCollection.AddTransient<LoginViewModel>();
         serviceCollection.AddTransient<ForgetPasswordViewModel>();
+        serviceCollection.AddTransient<RegisterViewModel>();
         serviceCollection.AddTransient<Func<string, SessionType, VerificationViewModel>>(sp =>
             (session, sessionType) =>
                 ActivatorUtilities.CreateInstance<VerificationViewModel>(sp, session, sessionType));
