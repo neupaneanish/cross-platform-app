@@ -62,13 +62,11 @@ public class App : Application
         serviceCollection.AddTransient<LoginViewModel>();
         serviceCollection.AddTransient<ForgetPasswordViewModel>();
         serviceCollection.AddTransient<Func<string, SessionType, VerificationViewModel>>(sp =>
-        {
-            return (session, sessionType) =>
-            {
-                var service = sp.GetRequiredService<VerificationService>();
-                return new VerificationViewModel(service, session, sessionType);
-            };
-        });
+            (session, sessionType) =>
+                ActivatorUtilities.CreateInstance<VerificationViewModel>(sp, session, sessionType));
+
+        serviceCollection.AddTransient<Func<string, ResetPasswordViewModel>>(sp =>
+            session => ActivatorUtilities.CreateInstance<ResetPasswordViewModel>(sp, session));
 
         // Views
         serviceCollection.AddTransient<MainView>(sp =>

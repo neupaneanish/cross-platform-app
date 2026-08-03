@@ -20,17 +20,20 @@ public enum SessionType
 public partial class VerificationViewModel : ViewModelBase
 {
     private readonly string _errMessage = "Something went wrong, try again";
+    private readonly Func<string, ResetPasswordViewModel> _resetPasswordFactory;
     private readonly VerificationService _service;
 
     public VerificationViewModel(
         VerificationService service,
         string session,
-        SessionType sessionType
+        SessionType sessionType,
+        Func<string, ResetPasswordViewModel> resetPasswordFactory
     )
     {
         _service = service;
         Session = session;
         SessionT = sessionType;
+        _resetPasswordFactory = resetPasswordFactory;
         UpdateCodeType();
     }
 
@@ -114,6 +117,7 @@ public partial class VerificationViewModel : ViewModelBase
     private async Task HandleVerification()
     {
         var response = await _service.VerificationAsync(Session, Code);
+        var vm = _resetPasswordFactory(response.Session);
         // TODO: Navigate to ResetPassword
     }
 
