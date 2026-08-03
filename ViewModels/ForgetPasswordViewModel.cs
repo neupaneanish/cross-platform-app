@@ -11,7 +11,9 @@ namespace TuinFounder.ViewModels;
 
 public partial class ForgetPasswordViewModel(
     ForgetPasswordService service,
-    Func<string, SessionType, VerificationViewModel> verificationFactory) : ViewModelBase
+    Action onNavigateToLogin,
+    Action<string, SessionType> onNavigateToVerification
+) : ViewModelBase
 {
     private readonly string _errMessage = "Something went wrong, try again";
 
@@ -24,6 +26,12 @@ public partial class ForgetPasswordViewModel(
     [ObservableProperty] public partial string? ErrorMessage { get; set; } = null;
 
     [ObservableProperty] public partial bool IsLoading { get; set; } = false;
+
+    [RelayCommand]
+    private void NavigateToLogin()
+    {
+        onNavigateToLogin();
+    }
 
     [RelayCommand]
     private async Task Submit()
@@ -41,10 +49,10 @@ public partial class ForgetPasswordViewModel(
             switch (response.ResponseCase)
             {
                 case ForgetPasswordResponse.ResponseOneofCase.Session:
-                    verificationFactory(response.Session, SessionType.Verification);
+                    onNavigateToVerification(response.Session, SessionType.Verification);
                     break;
                 case ForgetPasswordResponse.ResponseOneofCase.Verification:
-                    verificationFactory(response.Verification, SessionType.Verification);
+                    onNavigateToVerification(response.Verification, SessionType.Verification);
                     break;
                 case ForgetPasswordResponse.ResponseOneofCase.None:
                 default:

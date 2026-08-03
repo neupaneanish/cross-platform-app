@@ -11,7 +11,9 @@ namespace TuinFounder.ViewModels;
 
 public partial class ResetPasswordViewModel(
     ResetPasswordService service,
-    string session) : ViewModelBase
+    string session,
+    Action onNavigateToLogin
+) : ViewModelBase
 {
     private string Session { get; } = session;
     [ObservableProperty] private partial string? ErrorMessage { get; set; } = null;
@@ -36,6 +38,12 @@ public partial class ResetPasswordViewModel(
     }
 
     [RelayCommand]
+    private void NavigateToLogin()
+    {
+        onNavigateToLogin();
+    }
+
+    [RelayCommand]
     private async Task Submit()
     {
         if (IsLoading) return;
@@ -50,7 +58,7 @@ public partial class ResetPasswordViewModel(
         try
         {
             await service.ResetPasswordAsync(Session, Password, ConfirmPassword);
-            // TODO: Navigate to Login
+            onNavigateToLogin();
         }
         catch (RpcException e)
         {

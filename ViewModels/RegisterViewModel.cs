@@ -11,7 +11,8 @@ namespace TuinFounder.ViewModels;
 
 public partial class RegisterViewModel(
     RegisterService service,
-    Func<string, SessionType, VerificationViewModel> verificationFactory
+    Action<string, SessionType> onNavigateToVerification,
+    Action onNavigateToLogin
 ) : ViewModelBase
 {
     [ObservableProperty] private partial string? ErrorMessage { get; set; } = null;
@@ -48,6 +49,13 @@ public partial class RegisterViewModel(
     }
 
     [RelayCommand]
+    private void NavigateToLogin()
+    {
+        onNavigateToLogin();
+    }
+
+
+    [RelayCommand]
     private async Task Submit()
     {
         if (IsLoading) return;
@@ -62,8 +70,7 @@ public partial class RegisterViewModel(
         try
         {
             var response = await service.RegisterAsync(Email, Password, ConfirmPassword, Phone);
-            verificationFactory(response.Session, SessionType.Account);
-            // TODO: Navigate to Verification
+            onNavigateToVerification(response.Session, SessionType.Account);
         }
         catch (RpcException e)
         {

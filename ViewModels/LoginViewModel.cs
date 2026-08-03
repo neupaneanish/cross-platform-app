@@ -11,8 +11,10 @@ namespace TuinFounder.ViewModels;
 
 public partial class LoginViewModel(
     LoginService service,
-    Func<string, SessionType, VerificationViewModel> verificationFactory)
-    : ViewModelBase
+    Action onNavigateToRegister,
+    Action onNavigateToForgetPassword,
+    Action<string, SessionType> onNavigateToVerification
+) : ViewModelBase
 {
     private readonly string _errMessage = "Something went wrong, try again";
 
@@ -33,6 +35,19 @@ public partial class LoginViewModel(
     [ObservableProperty] public partial bool IsLoading { get; set; } = false;
 
     [RelayCommand]
+    public void NavigateToRegister()
+    {
+        onNavigateToRegister();
+    }
+
+    [RelayCommand]
+    public void NavigateToForgetPassword()
+    {
+        onNavigateToForgetPassword();
+    }
+
+
+    [RelayCommand]
     private async Task Submit()
     {
         ValidateAllProperties();
@@ -48,15 +63,12 @@ public partial class LoginViewModel(
             switch (response)
             {
                 case LoginResult.Success:
-                    // TODO: Navigate to Dashboard / Home
                     break;
                 case LoginResult.Totp totp:
-                    verificationFactory(totp.Session, SessionType.Totp);
-                    // TODO: Pass ViewModel
+                    onNavigateToVerification(totp.Session, SessionType.Totp);
                     break;
                 case LoginResult.Verification verification:
-                    verificationFactory(verification.Session, SessionType.Verification);
-                    // TODO: Pass ViewModel
+                    onNavigateToVerification(verification.Session, SessionType.Verification);
                     break;
                 default:
                     ErrorMessage = _errMessage;

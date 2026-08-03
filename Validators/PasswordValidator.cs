@@ -30,7 +30,7 @@ public partial class PasswordValidator : ValidationAttribute
         var errors = GetErrors(password);
         if (errors.Length <= 0) return ValidationResult.Success;
         var memberNames = validationContext.MemberName is { } name ? new[] { name } : null;
-        return new ValidationResult(string.Join("\n", errors), memberNames);
+        return new ValidationResult(ErrorMessage ?? string.Join("\n", errors), memberNames);
     }
 
     public static string[] GetErrors(string? password)

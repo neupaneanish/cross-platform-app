@@ -1,0 +1,14 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TuinFounder.ViewModels"
+             x:Class="TuinFounder.Views.PublicView"
+             x:DataType="vm:PublicViewModel">
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TransitioningContentControl Content="{Binding CurrentViewModel}">
+            <TransitioningContentControl.PageTransition>
+                <PageSlide Duration="0:0:0.25" />
+            </TransitioningContentControl.PageTransition>
+        </TransitioningContentControl>
+    </Grid>
+</UserControl>

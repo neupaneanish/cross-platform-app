@@ -7,6 +7,7 @@ namespace TuinFounder.Services;
 
 public interface ITokenService
 {
+    event Action<bool>? AuthChanged;
     void Save(Token token);
     string? GetAccess();
     string? GetRefresh();
@@ -34,6 +35,8 @@ public class TokenService : ITokenService
     private readonly Lock _lock = new();
     private TokenState? _tokenState = Load();
 
+    public event Action<bool>? AuthChanged;
+
     public void Save(Token token)
     {
         lock (_lock)
@@ -44,6 +47,8 @@ public class TokenService : ITokenService
 
             _tokenState = new TokenState(token.Access, token.Refresh, token.ExpireAt.ToDateTimeOffset());
         }
+
+        AuthChanged?.Invoke(true);
     }
 
     public string? GetAccess()
@@ -71,6 +76,8 @@ public class TokenService : ITokenService
             CredentialStore.Remove(TargetUrl, ExpireAtKey);
             _tokenState = null;
         }
+
+        AuthChanged?.Invoke(false);
     }
 
     public bool IsAuthenticated()

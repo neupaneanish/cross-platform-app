@@ -4,17 +4,14 @@
         MinWidth="1280" MinHeight="720"
         x:Class="TuinFounder.Views.MainView"
         x:DataType="vm:MainViewModel"
+        WindowStartupLocation="CenterScreen"
         Icon="/Assets/avalonia-logo.ico"
         Title="TuinFounder">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainViewModel />
-    </Design.DataContext>
-
-    <TextBox Text="{Binding Greeting}"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
+    <TransitioningContentControl Content="{Binding CurrentViewModel}">
+        <TransitioningContentControl.PageTransition>
+            <CrossFade Duration="0:0:0.25" />
+        </TransitioningContentControl.PageTransition>
+    </TransitioningContentControl>
 
 </Window>

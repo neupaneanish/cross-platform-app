@@ -20,20 +20,23 @@ public enum SessionType
 public partial class VerificationViewModel : ViewModelBase
 {
     private readonly string _errMessage = "Something went wrong, try again";
-    private readonly Func<string, ResetPasswordViewModel> _resetPasswordFactory;
+    private readonly Action _onNavigateToLogin;
+    private readonly Action<string> _onNavigateToResetPassword;
     private readonly VerificationService _service;
 
     public VerificationViewModel(
         VerificationService service,
         string session,
         SessionType sessionType,
-        Func<string, ResetPasswordViewModel> resetPasswordFactory
+        Action<string> onNavigateToResetPassword,
+        Action onNavigateToLogin
     )
     {
         _service = service;
         Session = session;
         SessionT = sessionType;
-        _resetPasswordFactory = resetPasswordFactory;
+        _onNavigateToResetPassword = onNavigateToResetPassword;
+        _onNavigateToLogin = onNavigateToLogin;
         UpdateCodeType();
     }
 
@@ -64,6 +67,12 @@ public partial class VerificationViewModel : ViewModelBase
             ? CodeType.Email
             : CodeType.Totp;
         ClearErrors(nameof(Code));
+    }
+
+    [RelayCommand]
+    private void NavigateToLogin()
+    {
+        _onNavigateToLogin();
     }
 
     [RelayCommand]
@@ -117,8 +126,7 @@ public partial class VerificationViewModel : ViewModelBase
     private async Task HandleVerification()
     {
         var response = await _service.VerificationAsync(Session, Code);
-        var vm = _resetPasswordFactory(response.Session);
-        // TODO: Navigate to ResetPassword
+        _onNavigateToResetPassword(response.Session);
     }
 
     private async Task HandleTwoFactorLogin()
@@ -138,7 +146,6 @@ public partial class VerificationViewModel : ViewModelBase
         switch (response)
         {
             case AccountVerificationResult.Success:
-                // TODO: Navigate to Dashboard / Home
                 break;
             case AccountVerificationResult.Reset reset:
                 SessionT = SessionType.Verification;

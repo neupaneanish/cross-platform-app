@@ -59,15 +59,33 @@ public class App : Application
 
         // ViewModels
         serviceCollection.AddTransient<MainViewModel>();
-        serviceCollection.AddTransient<LoginViewModel>();
-        serviceCollection.AddTransient<ForgetPasswordViewModel>();
-        serviceCollection.AddTransient<RegisterViewModel>();
-        serviceCollection.AddTransient<Func<string, SessionType, VerificationViewModel>>(sp =>
-            (session, sessionType) =>
-                ActivatorUtilities.CreateInstance<VerificationViewModel>(sp, session, sessionType));
+        serviceCollection.AddTransient<PublicViewModel>();
+        serviceCollection.AddTransient<PrivateViewModel>();
 
-        serviceCollection.AddTransient<Func<string, ResetPasswordViewModel>>(sp =>
-            session => ActivatorUtilities.CreateInstance<ResetPasswordViewModel>(sp, session));
+        serviceCollection.AddTransient<Func<Action, Action, Action<string, SessionType>, LoginViewModel>>(sp =>
+            (onRegister, onForgetPassword, onVerification) =>
+                ActivatorUtilities.CreateInstance<LoginViewModel>(
+                    sp,
+                    onRegister,
+                    onForgetPassword,
+                    onVerification
+                ));
+        serviceCollection.AddTransient<Func<Action<string, SessionType>, Action, RegisterViewModel>>(sp =>
+            (onVerification, onLogin) =>
+                ActivatorUtilities.CreateInstance<RegisterViewModel>(sp, onVerification, onLogin));
+
+        serviceCollection.AddTransient<Func<Action<string, SessionType>, Action, ForgetPasswordViewModel>>(sp =>
+            (onVerification, onLogin) =>
+                ActivatorUtilities.CreateInstance<ForgetPasswordViewModel>(sp, onVerification, onLogin));
+
+        serviceCollection.AddTransient<Func<string, SessionType, Action<string>, Action, VerificationViewModel>>(sp =>
+            (session, sessionType, onResetPassword, onLogin) =>
+                ActivatorUtilities.CreateInstance<VerificationViewModel>(sp, session, sessionType, onResetPassword,
+                    onLogin));
+
+        serviceCollection.AddTransient<Func<string, Action, ResetPasswordViewModel>>(sp =>
+            (token, onLogin) =>
+                ActivatorUtilities.CreateInstance<ResetPasswordViewModel>(sp, token, onLogin));
 
         // Views
         serviceCollection.AddTransient<MainView>(sp =>
