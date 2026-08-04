@@ -3,7 +3,7 @@
              xmlns:vm="clr-namespace:TuinFounder.ViewModels"
              x:Class="TuinFounder.Views.LoginView"
              x:DataType="vm:LoginViewModel">
-    <StackPanel Spacing="12">
+    <StackPanel Spacing="12" Width="512" HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock
             Text="Welcome Back"
             HorizontalAlignment="Center"
@@ -45,13 +45,13 @@
                 Content="Don't have an account? Signup"
                 HorizontalAlignment="Left"
                 Classes="ghost"
-                Command="{Binding NavigateToRegister}" />
+                Command="{Binding NavigateToRegisterCommand}" />
             <Button
                 Grid.Column="1"
                 Content="Forget Password?"
                 HorizontalAlignment="Right"
                 Classes="ghost"
-                Command="{Binding NavigateToForgetPassword}" />
+                Command="{Binding NavigateToForgetPasswordCommand}" />
         </Grid>
 
     </StackPanel>

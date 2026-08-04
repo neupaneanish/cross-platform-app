@@ -35,13 +35,13 @@ public partial class LoginViewModel(
     [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [RelayCommand]
-    public void NavigateToRegister()
+    private void NavigateToRegister()
     {
         onNavigateToRegister();
     }
 
     [RelayCommand]
-    public void NavigateToForgetPassword()
+    private void NavigateToForgetPassword()
     {
         onNavigateToForgetPassword();
     }
