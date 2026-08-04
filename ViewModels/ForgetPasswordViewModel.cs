@@ -23,9 +23,9 @@ public partial class ForgetPasswordViewModel(
     [EmailAddress(ErrorMessage = "Enter a valid email")]
     public partial string Email { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial string? ErrorMessage { get; set; } = null;
+    [ObservableProperty] public partial string? ErrorMessage { get; private set; } = null;
 
-    [ObservableProperty] public partial bool IsLoading { get; set; } = false;
+    [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [RelayCommand]
     private void NavigateToLogin()
