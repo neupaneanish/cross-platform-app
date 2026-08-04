@@ -30,9 +30,9 @@ public partial class LoginViewModel(
     [PasswordValidator(ErrorMessage = "Enter a valid password")]
     public partial string Password { get; set; } = string.Empty;
 
-    [ObservableProperty] public partial string? ErrorMessage { get; set; } = null;
+    [ObservableProperty] public partial string? ErrorMessage { get; private set; } = null;
 
-    [ObservableProperty] public partial bool IsLoading { get; set; } = false;
+    [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [RelayCommand]
     public void NavigateToRegister()
@@ -86,6 +86,8 @@ public partial class LoginViewModel(
         finally
         {
             IsLoading = false;
+            Password = string.Empty;
+            ClearErrors(Password);
         }
     }
 }

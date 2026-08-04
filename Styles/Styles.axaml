@@ -1,0 +1,97 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Global Style-->
+    <Style Selector="Window">
+        <Setter Property="FontFamily" Value="{DynamicResource Roboto}" />
+    </Style>
+
+    <!-- TextBox -->
+    <Style Selector="TextBox">
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Blue}" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
+
+    <Style Selector="TextBox:pointerover /template/ Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Blue}" />
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Blue}" />
+    </Style>
+
+    <Style Selector="TextBox:error /template/ Border">
+        <Setter Property="BorderBrush" Value="{DynamicResource Error}" />
+    </Style>
+
+    <Style Selector="TextBox:error">
+        <Setter Property="Foreground" Value="{DynamicResource Error}" />
+    </Style>
+
+    <!-- Button -->
+    <Style Selector="Button">
+        <Setter Property="Padding" Value="12" />
+    </Style>
+
+    <Style Selector="Button /template/ Border">
+        <Setter Property="CornerRadius" Value="8" />
+    </Style>
+
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource Blue}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource BlueDark}" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style Selector="Button.full">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="Button /template/ ContentPresenter">
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.ghost">
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource Orange}" />
+    </Style>
+
+    <!-- error Message -->
+    <Style Selector="Border.errormessage">
+        <Setter Property="Background" Value="{DynamicResource Error}" />
+        <Setter Property="Padding" Value="4, 8" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="BorderBrush" Value="{DynamicResource CrimsonDark}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <Style Selector="TextBlock.errormessage-text">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="15" />
+    </Style>
+
+    <!-- Auth Heading -->
+    <Style Selector="TextBlock.auth-header">
+        <Setter Property="FontSize" Value="36" />
+        <Setter Property="FontFamily" Value="{DynamicResource Audiowide}" />
+        <Setter Property="Foreground" Value="{DynamicResource Crimson}" />
+    </Style>
+</Styles>
