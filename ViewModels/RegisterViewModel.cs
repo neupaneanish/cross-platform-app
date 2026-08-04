@@ -15,9 +15,9 @@ public partial class RegisterViewModel(
     Action onNavigateToLogin
 ) : ViewModelBase
 {
-    [ObservableProperty] private partial string? ErrorMessage { get; set; } = null;
+    [ObservableProperty] public partial string? ErrorMessage { get; private set; } = null;
 
-    [ObservableProperty] private partial bool IsLoading { get; set; } = false;
+    [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]

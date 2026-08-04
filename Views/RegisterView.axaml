@@ -1,0 +1,62 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TuinFounder.ViewModels"
+             x:DataType="vm:RegisterViewModel"
+             x:Class="TuinFounder.Views.RegisterView">
+    <StackPanel Spacing="12" Width="512" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock
+            Text="Register"
+            HorizontalAlignment="Center"
+            Classes="auth-header" />
+
+        <Border
+            Classes="errormessage"
+            IsVisible="{Binding ErrorMessage,
+                Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            <TextBlock Text="{Binding ErrorMessage}" Classes="errormessage-text" />
+        </Border>
+
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Email" />
+            <TextBox
+                PlaceholderText="Email"
+                Text="{Binding Email, UpdateSourceTrigger=LostFocus}"
+                IsEnabled="{Binding !IsLoading}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Password" />
+            <TextBox PlaceholderText="Password"
+                     PasswordChar="*"
+                     Text="{Binding Password, UpdateSourceTrigger=LostFocus}"
+                     IsEnabled="{Binding !IsLoading}" />
+        </StackPanel>
+        
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Confirm Password" />
+            <TextBox PlaceholderText="Confirm Password"
+                     PasswordChar="*"
+                     Text="{Binding ConfirmPassword, UpdateSourceTrigger=LostFocus}"
+                     IsEnabled="{Binding !IsLoading}" />
+        </StackPanel>
+        
+        <StackPanel Orientation="Vertical" Spacing="4">
+            <TextBlock Text="Phone" />
+            <TextBox PlaceholderText="Phone number country code"
+                     Text="{Binding Phone, UpdateSourceTrigger=LostFocus}"
+                     IsEnabled="{Binding !IsLoading}" />
+        </StackPanel>
+        
+        <Button
+            Content="Register"
+            Classes="full primary"
+            Command="{Binding SubmitCommand}"
+            IsEnabled="{Binding !IsLoading}" />
+        
+        <Button
+            Content="Back to login"
+            Classes="transparent full"
+            Command="{Binding NavigateToLoginCommand }" />
+
+    </StackPanel>
+</UserControl>

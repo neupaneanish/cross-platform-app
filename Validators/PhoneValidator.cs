@@ -18,7 +18,9 @@ public class PhoneValidator : ValidationAttribute
         try
         {
             var phone = phoneUtils.Parse(number, null);
-            var isValid = phoneUtils.IsValidNumber(phone) && phoneUtils.GetNumberType(phone) != PhoneNumberType.MOBILE;
+            var phoneType = phoneUtils.GetNumberType(phone);
+            var isValid = phoneUtils.IsValidNumber(phone) &&
+                          phoneType is PhoneNumberType.FIXED_LINE_OR_MOBILE or PhoneNumberType.MOBILE;
             return isValid ? ValidationResult.Success : new ValidationResult(Message);
         }
         catch (NumberParseException)
