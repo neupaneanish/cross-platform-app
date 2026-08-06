@@ -2,9 +2,9 @@
 
 namespace TuinFounder.Views;
 
-public partial class RegisterView : UserControl
+public partial class VerificationView : UserControl
 {
-    public RegisterView()
+    public VerificationView()
     {
         InitializeComponent();
     }

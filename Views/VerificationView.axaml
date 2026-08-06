@@ -1,11 +1,11 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:TuinFounder.ViewModels"
-             x:Class="TuinFounder.Views.ForgetPasswordView"
-             x:DataType="vm:ForgetPasswordViewModel">
+             x:DataType="vm:VerificationViewModel"
+             x:Class="TuinFounder.Views.VerificationView">
     <StackPanel Spacing="12" Width="512" HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBlock
-            Text="Forget Password"
+            Text="{Binding Header}"
             HorizontalAlignment="Center"
             Classes="auth-header" />
 
@@ -17,23 +17,34 @@
         </Border>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Email" />
+            <Label Content="Code" Target="Code" />
             <TextBox
-                PlaceholderText="Email"
-                Text="{Binding Email, UpdateSourceTrigger=LostFocus}"
+                x:Name="Code"
+                PlaceholderText="Code"
+                Text="{Binding Code, UpdateSourceTrigger=LostFocus}"
                 IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
 
         <Button
-            Content="Send code"
+            Content="Verify Code"
             Classes="full primary"
             Command="{Binding SubmitCommand}"
             IsEnabled="{Binding !IsLoading}" />
 
-        <Button
-            Content="Back to login"
-            Classes="transparent full"
-            Command="{Binding NavigateToLoginCommand}" />
+        <Grid ColumnDefinitions="*, *" ColumnSpacing="8">
+            <Button
+                Grid.Column="0"
+                Content="Back to login"
+                HorizontalAlignment="Left"
+                Classes="ghost"
+                Command="{Binding NavigateToLoginCommand}" />
+            <Button
+                Grid.Column="1"
+                Content="{Binding ToggleOrResendText}"
+                HorizontalAlignment="Right"
+                Classes="ghost"
+                IsEnabled="{Binding ToggleOrResendEnabled}"
+                Command="{Binding ToggleOrResendCommand}" />
+        </Grid>
     </StackPanel>
-
 </UserControl>

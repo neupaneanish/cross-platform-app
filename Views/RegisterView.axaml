@@ -31,7 +31,7 @@
                      Text="{Binding Password, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
-        
+
         <StackPanel Orientation="Vertical" Spacing="4">
             <TextBlock Text="Confirm Password" />
             <TextBox PlaceholderText="Confirm Password"
@@ -39,20 +39,20 @@
                      Text="{Binding ConfirmPassword, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
-        
+
         <StackPanel Orientation="Vertical" Spacing="4">
             <TextBlock Text="Phone" />
             <TextBox PlaceholderText="Phone number country code"
                      Text="{Binding Phone, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
-        
+
         <Button
             Content="Register"
             Classes="full primary"
             Command="{Binding SubmitCommand}"
             IsEnabled="{Binding !IsLoading}" />
-        
+
         <Button
             Content="Back to login"
             Classes="transparent full"

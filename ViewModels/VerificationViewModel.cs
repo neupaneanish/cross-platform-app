@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Grpc.Core;
@@ -23,6 +24,7 @@ public partial class VerificationViewModel : ViewModelBase
     private readonly Action _onNavigateToLogin;
     private readonly Action<string> _onNavigateToResetPassword;
     private readonly VerificationService _service;
+    private readonly DispatcherTimer _timer;
 
     public VerificationViewModel(
         VerificationService service,
@@ -37,8 +39,28 @@ public partial class VerificationViewModel : ViewModelBase
         SessionT = sessionType;
         _onNavigateToResetPassword = onNavigateToResetPassword;
         _onNavigateToLogin = onNavigateToLogin;
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        _timer.Tick += OnTimerTick;
+
         UpdateCodeType();
+        UpdateHeader();
+        StartTimer();
     }
+
+    public bool ToggleOrResendEnabled => (SessionT == SessionType.Totp || TimeLeft <= TimeSpan.Zero) && !IsLoading;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(FormattedTime))]
+    [NotifyPropertyChangedFor(nameof(ToggleOrResendText))]
+    [NotifyPropertyChangedFor(nameof(ToggleOrResendEnabled))]
+    private partial TimeSpan TimeLeft { get; set; } = TimeSpan.FromMinutes(2);
+
+    public string FormattedTime => TimeLeft > TimeSpan.Zero
+        ? $"Resend in {TimeLeft.Minutes:D2}:{TimeLeft.Seconds:D2}"
+        : "Resend Code";
 
     [ObservableProperty] private partial string Session { get; set; }
     [ObservableProperty] private partial SessionType SessionT { get; set; }
@@ -46,13 +68,37 @@ public partial class VerificationViewModel : ViewModelBase
 
     [ObservableProperty] public partial string? ErrorMessage { get; set; } = null;
 
-    [ObservableProperty] public partial bool IsLoading { get; set; } = false;
+    [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
+
+    [ObservableProperty] public partial string Header { get; set; } = string.Empty;
+    public string ToggleOrResendText => SessionT switch
+    {
+        SessionType.Totp => CodeT == CodeType.Totp ? "Use recovery code" : "Use Authentication app",
+        SessionType.Verification or SessionType.Account => FormattedTime,
+        _ => string.Empty
+    };
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
     [Required(ErrorMessage = "Code is required")]
     [CustomValidation(typeof(VerificationViewModel), nameof(ValidateCode))]
     public partial string Code { get; set; } = string.Empty;
+
+    private void StartTimer(int minutes = 2)
+    {
+        if (SessionT == SessionType.Totp) return;
+        _timer.Stop();
+        TimeLeft = TimeSpan.FromMinutes(minutes);
+        _timer.Start();
+    }
+
+    private void OnTimerTick(object? sender, EventArgs e)
+    {
+        if (TimeLeft > TimeSpan.Zero)
+            TimeLeft = TimeLeft.Subtract(TimeSpan.FromSeconds(1));
+        else
+            _timer.Stop();
+    }
 
     public static ValidationResult? ValidateCode(string? code, ValidationContext context)
     {
@@ -66,12 +112,15 @@ public partial class VerificationViewModel : ViewModelBase
         CodeT = SessionT is SessionType.Account or SessionType.Verification
             ? CodeType.Email
             : CodeType.Totp;
+        OnPropertyChanged(nameof(ToggleOrResendText));
+        OnPropertyChanged(nameof(ToggleOrResendEnabled));
         ClearErrors(nameof(Code));
     }
 
     [RelayCommand]
     private void NavigateToLogin()
     {
+        _timer.Stop();
         _onNavigateToLogin();
     }
 
@@ -80,6 +129,7 @@ public partial class VerificationViewModel : ViewModelBase
     {
         if (SessionT != SessionType.Totp) return;
         CodeT = CodeT == CodeType.Totp ? CodeType.Recovery : CodeType.Totp;
+        OnPropertyChanged(nameof(ToggleOrResendText));
         Code = string.Empty;
         ClearErrors(nameof(Code));
     }
@@ -112,10 +162,9 @@ public partial class VerificationViewModel : ViewModelBase
         {
             ShowDialog(e);
         }
-        catch (Exception e)
+        catch (Exception )
         {
-            Console.WriteLine(e);
-            throw;
+            ErrorMessage = _errMessage;
         }
         finally
         {
@@ -126,6 +175,7 @@ public partial class VerificationViewModel : ViewModelBase
     private async Task HandleVerification()
     {
         var response = await _service.VerificationAsync(Session, Code);
+        _timer.Stop();
         _onNavigateToResetPassword(response.Session);
     }
 
@@ -136,6 +186,7 @@ public partial class VerificationViewModel : ViewModelBase
             : new LoginTwoFactorReq.Recovery(Code);
 
         await _service.LoginTwoFactorAsync(Session, req);
+        _timer.Stop();
         // TODO: Navigate to Home / Dashboard
     }
 
@@ -146,16 +197,19 @@ public partial class VerificationViewModel : ViewModelBase
         switch (response)
         {
             case AccountVerificationResult.Success:
+                _timer.Stop();
                 break;
             case AccountVerificationResult.Reset reset:
                 SessionT = SessionType.Verification;
                 Session = reset.Session;
                 UpdateCodeType();
+                StartTimer();
                 break;
             case AccountVerificationResult.Totp totp:
                 Session = totp.Session;
                 SessionT = SessionType.Totp;
                 UpdateCodeType();
+                StartTimer();
                 break;
         }
     }
@@ -163,6 +217,8 @@ public partial class VerificationViewModel : ViewModelBase
     [RelayCommand]
     private async Task Resend()
     {
+        if (!ToggleOrResendEnabled) return;
+        
         ErrorMessage = null;
         IsLoading = true;
 
@@ -171,6 +227,7 @@ public partial class VerificationViewModel : ViewModelBase
             var response = await _service.ResendAsync(Session);
             Session = response.Session;
             Code = string.Empty;
+            StartTimer();
         }
         catch (RpcException e)
         {
@@ -200,5 +257,26 @@ public partial class VerificationViewModel : ViewModelBase
                 ErrorMessage = e.Status.Detail;
                 break;
         }
+    }
+
+    private void UpdateHeader()
+    {
+        Header = SessionT switch
+        {
+            SessionType.Totp => "Two Factor Verification",
+            SessionType.Account => "Account Verification",
+            SessionType.Verification => "Reset Verification",
+            _ => string.Empty
+        };
+    }
+
+    [RelayCommand]
+    private async Task ToggleOrResend()
+    {
+        if (SessionT == SessionType.Totp)
+            ToggleCodeType();
+
+        else
+            await Resend();
     }
 }

@@ -50,11 +50,23 @@ public partial class PublicViewModel : ViewModelBase
 
     private void NavigateToVerification(string session, SessionType type)
     {
+        if (type == SessionType.Undefine || string.IsNullOrWhiteSpace(session))
+        {
+            NavigateToLogin();
+            return;
+        }
+
         CurrentViewModel = _verificationFactory(session, type, NavigateToResetPassword, NavigateToLogin);
     }
 
-    private void NavigateToResetPassword(string token)
+    private void NavigateToResetPassword(string session)
     {
-        CurrentViewModel = _resetPasswordFactory(token, NavigateToLogin);
+        if (string.IsNullOrWhiteSpace(session))
+        {
+            NavigateToLogin();
+            return;
+        }
+
+        CurrentViewModel = _resetPasswordFactory(session, NavigateToLogin);
     }
 }
