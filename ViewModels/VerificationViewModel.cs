@@ -71,6 +71,7 @@ public partial class VerificationViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [ObservableProperty] public partial string Header { get; set; } = string.Empty;
+
     public string ToggleOrResendText => SessionT switch
     {
         SessionType.Totp => CodeT == CodeType.Totp ? "Use recovery code" : "Use Authentication app",
@@ -162,7 +163,7 @@ public partial class VerificationViewModel : ViewModelBase
         {
             ShowDialog(e);
         }
-        catch (Exception )
+        catch (Exception)
         {
             ErrorMessage = _errMessage;
         }
@@ -218,7 +219,7 @@ public partial class VerificationViewModel : ViewModelBase
     private async Task Resend()
     {
         if (!ToggleOrResendEnabled) return;
-        
+
         ErrorMessage = null;
         IsLoading = true;
 

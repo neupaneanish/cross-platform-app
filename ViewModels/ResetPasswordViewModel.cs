@@ -16,9 +16,9 @@ public partial class ResetPasswordViewModel(
 ) : ViewModelBase
 {
     private string Session { get; } = session;
-    [ObservableProperty] private partial string? ErrorMessage { get; set; } = null;
+    [ObservableProperty] public partial string? ErrorMessage { get; set; } = null;
 
-    [ObservableProperty] private partial bool IsLoading { get; set; } = false;
+    [ObservableProperty] public partial bool IsLoading { get; private set; } = false;
 
     [ObservableProperty]
     [NotifyDataErrorInfo]
