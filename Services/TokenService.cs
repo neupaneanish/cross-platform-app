@@ -8,10 +8,11 @@ namespace TuinFounder.Services;
 public interface ITokenService
 {
     event Action<bool>? AuthChanged;
+    event Action<bool>? SessionExpired;
     void Save(Token token);
     string? GetAccess();
     string? GetRefresh();
-    void Delete();
+    void Delete(bool expired);
     bool IsAuthenticated();
     (string? Refresh, bool ExpiringSoon) RequiredRefresh();
 }
@@ -36,6 +37,7 @@ public class TokenService : ITokenService
     private TokenState? _tokenState = Load();
 
     public event Action<bool>? AuthChanged;
+    public event Action<bool>? SessionExpired;
 
     public void Save(Token token)
     {
@@ -49,6 +51,7 @@ public class TokenService : ITokenService
         }
 
         AuthChanged?.Invoke(true);
+        SessionExpired?.Invoke(false);
     }
 
     public string? GetAccess()
@@ -67,7 +70,7 @@ public class TokenService : ITokenService
         }
     }
 
-    public void Delete()
+    public void Delete(bool expired)
     {
         lock (_lock)
         {
@@ -78,6 +81,7 @@ public class TokenService : ITokenService
         }
 
         AuthChanged?.Invoke(false);
+        SessionExpired?.Invoke(expired);
     }
 
     public bool IsAuthenticated()

@@ -51,6 +51,7 @@ public class App : Application
 
         // Services
         serviceCollection.AddSingleton<ITokenService, TokenService>();
+        serviceCollection.AddSingleton<AuthInterceptorService>();
         serviceCollection.AddTransient<LoginService>();
         serviceCollection.AddTransient<VerificationService>();
         serviceCollection.AddTransient<ForgetPasswordService>();

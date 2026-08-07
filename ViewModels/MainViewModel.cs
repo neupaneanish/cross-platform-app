@@ -6,22 +6,21 @@ namespace TuinFounder.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    [ObservableProperty] private ViewModelBase _currentViewModel;
-
     public MainViewModel(
         ITokenService tokenService,
         PublicViewModel publicViewModel,
         PrivateViewModel privateViewModel
     )
     {
-        _currentViewModel = tokenService.IsAuthenticated() ? privateViewModel : publicViewModel;
+        CurrentViewModel = tokenService.IsAuthenticated() ? privateViewModel : publicViewModel;
 
+        tokenService.SessionExpired += isExpired => 
+            Dispatcher.UIThread.Post(() => { SessionExpired = isExpired; });
+        
         tokenService.AuthChanged += isAuthenticated =>
-        {
-            Dispatcher.UIThread.Post(() =>
-            {
-                _currentViewModel = isAuthenticated ? privateViewModel : publicViewModel;
-            });
-        };
+            Dispatcher.UIThread.Post(() => CurrentViewModel = isAuthenticated ? privateViewModel : publicViewModel);
     }
+
+    [ObservableProperty] public partial ViewModelBase CurrentViewModel { get; set; }
+    [ObservableProperty] public partial bool SessionExpired { get; set; }
 }
