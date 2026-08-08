@@ -71,6 +71,7 @@ public class App : Application
                     onForgetPassword,
                     onVerification
                 ));
+
         serviceCollection.AddTransient<Func<Action<string, SessionType>, Action, RegisterViewModel>>(sp =>
             (onVerification, onLogin) =>
                 ActivatorUtilities.CreateInstance<RegisterViewModel>(sp, onVerification, onLogin));

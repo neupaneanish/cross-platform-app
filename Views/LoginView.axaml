@@ -12,24 +12,27 @@
         <Border
             Classes="errormessage"
             IsVisible="{Binding ErrorMessage,
-                Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+            Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
             <TextBlock Text="{Binding ErrorMessage}" Classes="errormessage-text" />
         </Border>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Email" />
+            <Label Content="Email" Target="Email" />
             <TextBox
                 PlaceholderText="Email"
+                x:Name="Email"
                 Text="{Binding Email, UpdateSourceTrigger=LostFocus}"
-                IsEnabled="{Binding !IsLoading}" />
+                IsReadOnly="{Binding IsLoading}" />
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Password" />
-            <TextBox PlaceholderText="Password"
-                     PasswordChar="*"
-                     Text="{Binding Password, UpdateSourceTrigger=LostFocus}"
-                     IsEnabled="{Binding !IsLoading}" />
+            <Label Content="Password" Target="Password" />
+            <TextBox
+                PlaceholderText="Password"
+                x:Name="Password"
+                PasswordChar="*"
+                Text="{Binding Password, UpdateSourceTrigger=LostFocus}"
+                IsReadOnly="{Binding IsLoading}" />
 
         </StackPanel>
 
@@ -45,13 +48,16 @@
                 Content="Don't have an account? Signup"
                 HorizontalAlignment="Left"
                 Classes="ghost"
-                Command="{Binding NavigateToRegisterCommand}" />
+                Command="{Binding NavigateToRegisterCommand}"
+                IsEnabled="{Binding !IsLoading}" />
+
             <Button
                 Grid.Column="1"
                 Content="Forget Password?"
                 HorizontalAlignment="Right"
                 Classes="ghost"
-                Command="{Binding NavigateToForgetPasswordCommand}" />
+                Command="{Binding NavigateToForgetPasswordCommand}"
+                IsEnabled="{Binding !IsLoading}" />
         </Grid>
 
     </StackPanel>

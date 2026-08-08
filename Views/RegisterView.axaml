@@ -17,32 +17,36 @@
         </Border>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Email" />
+            <Label Content="Email" Target="Email" />
             <TextBox
+                x:Name="Email"
                 PlaceholderText="Email"
                 Text="{Binding Email, UpdateSourceTrigger=LostFocus}"
                 IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Password" />
+            <Label Content="Password" Target="Password" />
             <TextBox PlaceholderText="Password"
+                     x:Name="Password"
                      PasswordChar="*"
                      Text="{Binding Password, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Confirm Password" />
+            <Label Content="Confirm Password" Target="ConfirmPassword" />
             <TextBox PlaceholderText="Confirm Password"
+                     x:Name="ConfirmPassword"
                      PasswordChar="*"
                      Text="{Binding ConfirmPassword, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>
 
         <StackPanel Orientation="Vertical" Spacing="4">
-            <TextBlock Text="Phone" />
+            <Label Content="Phone" Target="Phone" />
             <TextBox PlaceholderText="Phone number country code"
+                     x:Name="Phone"
                      Text="{Binding Phone, UpdateSourceTrigger=LostFocus}"
                      IsEnabled="{Binding !IsLoading}" />
         </StackPanel>

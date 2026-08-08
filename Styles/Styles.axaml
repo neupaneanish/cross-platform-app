@@ -34,6 +34,10 @@
         <Setter Property="Padding" Value="12" />
     </Style>
 
+    <Style Selector="Button:disabled">
+        <Setter Property="Background" Value="{DynamicResource Gray}" />
+    </Style>
+
     <Style Selector="Button /template/ Border">
         <Setter Property="CornerRadius" Value="8" />
     </Style>

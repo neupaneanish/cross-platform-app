@@ -14,9 +14,9 @@ public partial class MainViewModel : ViewModelBase
     {
         CurrentViewModel = tokenService.IsAuthenticated() ? privateViewModel : publicViewModel;
 
-        tokenService.SessionExpired += isExpired => 
+        tokenService.SessionExpired += isExpired =>
             Dispatcher.UIThread.Post(() => { SessionExpired = isExpired; });
-        
+
         tokenService.AuthChanged += isAuthenticated =>
             Dispatcher.UIThread.Post(() => CurrentViewModel = isAuthenticated ? privateViewModel : publicViewModel);
     }

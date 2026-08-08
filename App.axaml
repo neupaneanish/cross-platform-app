@@ -7,7 +7,9 @@
 
     <Application.Styles>
         <FluentTheme />
+
         <StyleInclude Source="Styles/Styles.axaml" />
+
         <Style>
             <Style.Resources>
                 <SolidColorBrush x:Key="SystemControlErrorTextForegroundBrush">#ED4337</SolidColorBrush>
@@ -15,6 +17,7 @@
             </Style.Resources>
         </Style>
     </Application.Styles>
+
     <Application.Resources>
         <SolidColorBrush x:Key="Dark">#0F172A</SolidColorBrush>
         <SolidColorBrush x:Key="CrimsonLight">#fb3856</SolidColorBrush>
